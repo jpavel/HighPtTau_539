@@ -3,3 +3,5 @@ CVS
 CVS/*
 __init__.py
 *~
+patTuple_standard.root
+PhysicsTools/PatAlgos/test/*.log

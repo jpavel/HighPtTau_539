@@ -15,14 +15,9 @@ from PhysicsTools.PatAlgos.patTemplate_cfg import *
 
 ## remove certain objects from the default sequence
 # removeAllPATObjectsBut(process, ['Muons'])
-# removeSpecrecoTauClassicHPSSeqificPATObjects(process, ['Electrons', 'Muons', 'Taus'])
+# removeSpecificPATObjects(process, ['Electrons', 'Muons', 'Taus'])
 
 process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-
-from PhysicsTools.PatAlgos.tools.tauTools import *
-
-switchToPFTauHPS(process)
-
 ## let it run
 process.p = cms.Path(
     process.recoTauClassicHPSSequence*
@@ -38,6 +33,12 @@ process.p = cms.Path(
 #                                         ##
 #from PhysicsTools.PatAlgos.patInputFiles_cff import filesRelValProdTTbarAODSIM
 process.source.fileNames = cms.untracked.vstring('/store/relval/CMSSW_5_3_6-START53_V14/RelValProdTTbar/AODSIM/v2/00000/76ED0FA6-1E2A-E211-B8F1-001A92971B72.root')
+process.source.dropDescendantsOfDroppedBranches = cms.untracked.bool(False)
+process.source.inputCommands = cms.untracked.vstring(
+    'keep *',
+    'drop recoPFTaus_*_*_*'
+    )
+
 #                                         ##
 process.maxEvents.input = 100
 #                                         ##
