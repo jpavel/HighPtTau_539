@@ -1,7 +1,10 @@
 *.pyc
 CVS
 CVS/*
+.svn
+.svn/*
 __init__.py
 *~
 patTuple_standard.root
 PhysicsTools/PatAlgos/test/*.log
+output.root
