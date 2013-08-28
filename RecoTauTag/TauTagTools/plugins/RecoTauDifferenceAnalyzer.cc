@@ -73,6 +73,7 @@ class RecoTauDifferenceAnalyzer : public edm::EDFilter {
   bool onlyHadronic_;
   int requireDecayMode_;
   bool checkMother_;
+  bool useOldDM_;
   edm::InputTag vertexTag_;
   edm::InputTag rhoProducer_;
   edm::InputTag discLoose_;
@@ -307,7 +308,7 @@ RecoTauDifferenceAnalyzer::RecoTauDifferenceAnalyzer(
   requireDecayMode_ = pset.exists("requireDecayMode") ? pset.getParameter<int>("requireDecayMode"): 0; // -1 No requirement; 0 = any DM; 1 = 1p; 2 = 1p+X; 3=3p
   checkMother_ = pset.exists("checkMother") ? pset.getParameter<bool>("checkMother"): 1;
   Zmumu_ = pset.exists("Zmumu") ? pset.getParameter<bool>("Zmumu"): false;
-  
+  useOldDM_ = pset.exists("useOldDM") ? pset.getParameter<bool>("useOldDM"): true;  
   discLoose_ = pset.exists("discLoose") ? pset.getParameter<edm::InputTag>("discLoose"): pset.getParameter<edm::InputTag>("disc1");
   discMedium_ = pset.exists("discMedium") ? pset.getParameter<edm::InputTag>("discMedium"): pset.getParameter<edm::InputTag>("disc1");
   discTight_ = pset.exists("discTight") ? pset.getParameter<edm::InputTag>("discTight"): pset.getParameter<edm::InputTag>("disc1");
@@ -1013,6 +1014,7 @@ if(!background_ && mcMatch_ && !useGenTaus_){
     // See what's up with the discriminators
     bool result1 = ((*disc1)[tau1] > 0.5);
     bool result2 = ((*disc2)[bestMatch] > 0.5);
+    double result2D = (*disc2)[tau1];
     bool resultLoose = ((*discLoose)[tau1] > 0.5);
     bool resultMedium = ((*discMedium)[tau1] > 0.5);
     bool resultTight = ((*discTight)[tau1] > 0.5);
@@ -1025,7 +1027,7 @@ if(!background_ && mcMatch_ && !useGenTaus_){
     double resultMVA = (*discMVA)[tau1];
     double resultCH = (*discCH)[tau1];
     double resultN = (*discN)[tau1];
-    double resultCOMB = (*discCOMB)[tau1];
+    double resultCOMB = (*disc2)[tau1];
     double resultDM = (*discDM)[tau1];
     double pt1 = tau1->pt();
     double pt2 = bestMatch->pt();
@@ -1108,6 +1110,7 @@ if(!background_ && mcMatch_ && !useGenTaus_){
   
     if(requireDecayMode_>=0 && resultDM){
       if(requireDecayMode_ == 0 || (requireDecayMode_ == 1 && nCharged == 1 && nPi0 ==0) || (requireDecayMode_ == 2 && nCharged ==1 && nPi0 > 0) || (requireDecayMode_==3 && nCharged == 3)){
+	
     if(background_){
       pt_mon=jet1->pt();
       eta_mon = jet1->eta();
@@ -1118,10 +1121,10 @@ if(!background_ && mcMatch_ && !useGenTaus_){
       phi_mon=phi_vis;
     }
     
-    
-    if(pt_mon < 5.0) continue;
+    if(useOldDM_== true && nCharged ==2 ) continue;
+    if(pt_mon < 20.0 || fabs(eta_mon)>2.3) continue;
 
-    if(result1 && pt1 > 20.0 && pt_mon > 5.0){
+    if(result1){
       h_eff_pt_1->Fill(pt_mon,1);
       h_eff_eta_1->Fill(eta_mon,1);
       h_eff_vx_1->Fill(nVx,1); 
@@ -1129,7 +1132,7 @@ if(!background_ && mcMatch_ && !useGenTaus_){
       h_eff_id_eta_1->Fill(eta_mon,1);
       h_eff_id_vx_1->Fill(nVx,1);    
       h_eff_id_phi_1->Fill(phi_mon,1);
-    }else if(pt1 > 20.0 && pt_mon > 5.0){
+    }else{
       h_eff_id_pt_1->Fill(pt_mon,0);
       h_eff_id_eta_1->Fill(eta_mon,0);
       h_eff_id_vx_1->Fill(nVx,0);
@@ -1137,137 +1140,114 @@ if(!background_ && mcMatch_ && !useGenTaus_){
       h_eff_eta_1->Fill(eta_mon,0);
       h_eff_vx_1->Fill(nVx,0);
       h_eff_id_phi_1->Fill(phi_mon,0);
-    }else if(pt_mon>5.0){
-      h_eff_id_pt_1->Fill(pt_mon,0);
-      h_eff_pt_1->Fill(pt_mon,0);
-      h_eff_eta_1->Fill(eta_mon,0);
-      h_eff_vx_1->Fill(nVx,0);
     }
 
-    if(resultLoose && pt1 > 20.0 && pt_mon > 5.0){
+    if(resultLoose){
       h_eff_id_pt_loose->Fill(pt_mon,1);
       h_eff_id_eta_loose->Fill(eta_mon,1);
       h_eff_id_vx_loose->Fill(nVx,1);    
       h_eff_id_phi_loose->Fill(phi_mon,1);
-    }else if(pt1 > 20.0 && pt_mon > 5.0){
+    }else{
       h_eff_id_pt_loose->Fill(pt_mon,0);
       h_eff_id_eta_loose->Fill(eta_mon,0);
       h_eff_id_vx_loose->Fill(nVx,0);
       h_eff_id_phi_loose->Fill(phi_mon,0);
-    }else if(pt_mon>5.0){
-      h_eff_id_pt_loose->Fill(pt_mon,0);
     }
 
-    if(resultMedium && pt1 > 20.0 ){
+    if(resultMedium ){
       h_eff_id_pt_medium->Fill(pt_mon,1);
       h_eff_id_eta_medium->Fill(eta_mon,1);
       h_eff_id_vx_medium->Fill(nVx,1);    
       h_eff_id_phi_medium->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_medium->Fill(pt_mon,0);
       h_eff_id_eta_medium->Fill(eta_mon,0);
       h_eff_id_vx_medium->Fill(nVx,0);
       h_eff_id_phi_medium->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_medium->Fill(pt_mon,0);
     }
 
-    if(resultTight && pt1 > 20.0){
+    if(resultTight){
       h_eff_id_pt_tight->Fill(pt_mon,1);
       h_eff_id_eta_tight->Fill(eta_mon,1);
       h_eff_id_vx_tight->Fill(nVx,1);    
       h_eff_id_phi_tight->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_tight->Fill(pt_mon,0);
       h_eff_id_eta_tight->Fill(eta_mon,0);
       h_eff_id_vx_tight->Fill(nVx,0);
       h_eff_id_phi_tight->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_tight->Fill(pt_mon,0);
     }
 
-    if(resultLoose_2 && pt1 > 20.0){
+    if(resultLoose_2){
       h_eff_id_pt_loose_2->Fill(pt_mon,1);
       h_eff_id_eta_loose_2->Fill(eta_mon,1);
       h_eff_id_vx_loose_2->Fill(nVx,1); 
       h_eff_id_phi_loose_2->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_loose_2->Fill(pt_mon,0);
       h_eff_id_eta_loose_2->Fill(eta_mon,0);
       h_eff_id_vx_loose_2->Fill(nVx,0);
       h_eff_id_phi_loose_2->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_loose_2->Fill(pt_mon,0);
     }
 
-    if(resultMedium_2 && pt1 > 20.0){
+    if(resultMedium_2){
       h_eff_id_pt_medium_2->Fill(pt_mon,1);
       h_eff_id_eta_medium_2->Fill(eta_mon,1);
       h_eff_id_vx_medium_2->Fill(nVx,1);
       h_eff_id_phi_medium_2->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_medium_2->Fill(pt_mon,0);
       h_eff_id_eta_medium_2->Fill(eta_mon,0);
       h_eff_id_vx_medium_2->Fill(nVx,0);
       h_eff_id_phi_medium_2->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_medium_2->Fill(pt_mon,0);
     }
 
-    if(resultTight_2 && pt1 > 20.0){
+    if(resultTight_2){
       h_eff_id_pt_tight_2->Fill(pt_mon,1);
       h_eff_id_eta_tight_2->Fill(eta_mon,1);
       h_eff_id_vx_tight_2->Fill(nVx,1);    
       h_eff_id_phi_tight_2->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_tight_2->Fill(pt_mon,0);
       h_eff_id_eta_tight_2->Fill(eta_mon,0);
       h_eff_id_vx_tight_2->Fill(nVx,0);
       h_eff_id_phi_tight_2->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_tight_2->Fill(pt_mon,0);
     }
 
-    if(resultLoose_3 && pt1 > 20.0){
+    if(resultLoose_3){
       h_eff_id_pt_loose_3->Fill(pt_mon,1);
       h_eff_id_eta_loose_3->Fill(eta_mon,1);
       h_eff_id_vx_loose_3->Fill(nVx,1);
       h_eff_id_phi_loose_3->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_loose_3->Fill(pt_mon,0);
       h_eff_id_eta_loose_3->Fill(eta_mon,0);
       h_eff_id_vx_loose_3->Fill(nVx,0);
       h_eff_id_phi_loose_3->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_loose_3->Fill(pt_mon,0);
     }
 
-    if(resultMedium_3 && pt1 > 20.0){
+    if(resultMedium_3){
       h_eff_id_pt_medium_3->Fill(pt_mon,1);
       h_eff_id_eta_medium_3->Fill(eta_mon,1);
       h_eff_id_vx_medium_3->Fill(nVx,1);  
       h_eff_id_phi_medium_3->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_medium_3->Fill(pt_mon,0);
       h_eff_id_eta_medium_3->Fill(eta_mon,0);
       h_eff_id_vx_medium_3->Fill(nVx,0);
       h_eff_id_phi_medium_3->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_medium_3->Fill(pt_mon,0);
     }
 
-    if(resultTight_3 && pt1 > 20.0){
+    if(resultTight_3){
       h_eff_id_pt_tight_3->Fill(pt_mon,1);
       h_eff_id_eta_tight_3->Fill(eta_mon,1);
       h_eff_id_vx_tight_3->Fill(nVx,1);    
       h_eff_id_phi_tight_3->Fill(phi_mon,1);
-    }else if(pt1 > 20.0){
+    }else{
       h_eff_id_pt_tight_3->Fill(pt_mon,0);
       h_eff_id_eta_tight_3->Fill(eta_mon,0);
       h_eff_id_vx_tight_3->Fill(nVx,0);
       h_eff_id_phi_tight_3->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_tight_3->Fill(pt_mon,0);
     }
 
     if(background_){
@@ -1275,28 +1255,14 @@ if(!background_ && mcMatch_ && !useGenTaus_){
       eta_mon=jet2->eta();
       phi_mon=jet2->eta();
     }
-    if(result2 && pt2 > 20.0){
-      h_eff_pt_2->Fill(pt_mon,1);
-      h_eff_eta_2->Fill(eta_mon,1);
-      h_eff_vx_2->Fill(nVx,1);
-      h_eff_id_pt_2->Fill(pt_mon,1);
-      h_eff_id_eta_2->Fill(eta_mon,1);
-      h_eff_id_vx_2->Fill(nVx,1);
-      h_eff_id_phi_2->Fill(phi_mon,1);
-    }else if(pt2> 20.0){
-      h_eff_id_pt_2->Fill(pt_mon,0);
-      h_eff_id_eta_2->Fill(eta_mon,0);
-      h_eff_id_vx_2->Fill(nVx,0);
-      h_eff_pt_2->Fill(pt_mon,0);
-      h_eff_eta_2->Fill(eta_mon,0);
-      h_eff_vx_2->Fill(nVx,0);
-      h_eff_id_phi_2->Fill(phi_mon,0);
-    }else{
-      h_eff_id_pt_2->Fill(pt_mon,0);
-      h_eff_pt_2->Fill(pt_mon,0);
-      h_eff_eta_2->Fill(eta_mon,0);
-      h_eff_vx_2->Fill(nVx,0);
-    }
+    if(pt_mon < 20.0 || fabs(eta_mon) > 2.3) continue;
+      h_eff_pt_2->Fill(pt_mon,result2D);
+      h_eff_eta_2->Fill(eta_mon,result2D);
+      h_eff_vx_2->Fill(nVx,result2D);
+      h_eff_id_pt_2->Fill(pt_mon,result2D);
+      h_eff_id_eta_2->Fill(eta_mon,result2D);
+      h_eff_id_vx_2->Fill(nVx,result2D);
+      h_eff_id_phi_2->Fill(phi_mon,result2D);
 
     int ptRange = -1;
 
