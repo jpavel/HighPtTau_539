@@ -64,14 +64,10 @@ process.produceAntiMuonDiscrMVATrainingNtupleSequence += process.PFTau
 
 ##process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits.verbosity = cms.int32(1)
 
-##process.load("TauAnalysis/RecoTools/recoVertexSelection_cff")
-##process.produceAntiMuonDiscrMVATrainingNtupleSequence += process.selectPrimaryVertex
-
 ##process.dumpPFTaus = cms.EDAnalyzer("DumpPFTaus",
 ##    src = cms.InputTag('hpsPFTauProducer'),
 ##    srcTauRef = cms.InputTag('hpsPFTauProducer'),
-##    srcTauRefDiscriminators = cms.VInputTag('hpsPFTauDiscriminationByDecayModeFinding'),
-##    srcVertex = cms.InputTag('selectedPrimaryVertexHighestPtTrackSum')
+##    srcTauRefDiscriminators = cms.VInputTag('hpsPFTauDiscriminationByDecayModeFinding')
 ##)
 ##process.produceAntiMuonDiscrMVATrainingNtupleSequence += process.dumpPFTaus
 
@@ -79,7 +75,7 @@ process.tausForAntiMuonDiscrMVATraining = cms.EDFilter("PFTauSelector",
     src = cms.InputTag('hpsPFTauProducer'),
     discriminators = cms.VPSet(
         cms.PSet(
-            discriminator = cms.InputTag('hpsPFTauDiscriminationByDecayModeFindingNewDMs'),
+            discriminator = cms.InputTag('hpsPFTauDiscriminationByDecayModeFinding'),
             selectionCut = cms.double(0.5)
         )
     ),
@@ -87,7 +83,7 @@ process.tausForAntiMuonDiscrMVATraining = cms.EDFilter("PFTauSelector",
 )
 process.produceAntiMuonDiscrMVATrainingNtupleSequence += process.tausForAntiMuonDiscrMVATraining
 
-process.tausForAntiMuonDiscrMVATrainingDiscriminationByDecayModeFinding = process.hpsPFTauDiscriminationByDecayModeFindingNewDMs.clone(
+process.tausForAntiMuonDiscrMVATrainingDiscriminationByDecayModeFinding = process.hpsPFTauDiscriminationByDecayModeFinding.clone(
     PFTauProducer = cms.InputTag('tausForAntiMuonDiscrMVATraining')
 )
 process.produceAntiMuonDiscrMVATrainingNtupleSequence += process.tausForAntiMuonDiscrMVATrainingDiscriminationByDecayModeFinding
@@ -110,8 +106,6 @@ process.tausForAntiMuonDiscrMVATrainingTransverseImpactParameters = process.hpsP
 process.produceAntiMuonDiscrMVATrainingNtupleSequence += process.tausForAntiMuonDiscrMVATrainingTransverseImpactParameters
 
 tauIdDiscriminatorsToReRun = [
-    "hpsPFTauDiscriminationByDecayModeFindingNewDMs",
-    "hpsPFTauDiscriminationByDecayModeFindingOldDMs",
     "hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr",
     "hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr",
     "hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr",
@@ -319,8 +313,7 @@ process.antiMuonDiscrMVATrainingNtupleProducer = cms.EDProducer("AntiMuonDiscrMV
     minGenVisPt = cms.double(10.),                                          
     dRgenParticleMatch = cms.double(0.3),
     tauIdDiscriminators = cms.PSet(
-        decayModeFindingNewDMs = cms.InputTag('tausForAntiMuonDiscrMVATrainingDiscriminationByDecayModeFindingNewDMs'),
-        decayModeFindingOldDMs = cms.InputTag('tausForAntiMuonDiscrMVATrainingDiscriminationByDecayModeFindingOldDMs'),
+        decayModeFinding = cms.InputTag('tausForAntiMuonDiscrMVATrainingDiscriminationByDecayModeFinding'),
         byLooseCombinedIsolationDeltaBetaCorr8Hits = cms.InputTag('tausForAntiMuonDiscrMVATrainingDiscriminationByLooseCombinedIsolationDBSumPtCorr'),
         byMediumCombinedIsolationDeltaBetaCorr8Hits = cms.InputTag('tausForAntiMuonDiscrMVATrainingDiscriminationByMediumCombinedIsolationDBSumPtCorr'),
         byTightCombinedIsolationDeltaBetaCorr8Hits = cms.InputTag('tausForAntiMuonDiscrMVATrainingDiscriminationByTightCombinedIsolationDBSumPtCorr'),

@@ -72,7 +72,7 @@ process.tausForTauIdMVATraining = cms.EDFilter("PFTauSelector",
     src = cms.InputTag('hpsPFTauProducer'),
     discriminators = cms.VPSet(
         cms.PSet(
-            discriminator = cms.InputTag('hpsPFTauDiscriminationByDecayModeFindingNewDMs'),
+            discriminator = cms.InputTag('hpsPFTauDiscriminationByDecayModeFinding'),
             selectionCut = cms.double(0.5)
         )
     ),
@@ -80,7 +80,7 @@ process.tausForTauIdMVATraining = cms.EDFilter("PFTauSelector",
 )
 process.produceTauIdMVATrainingNtupleSequence += process.tausForTauIdMVATraining
 
-process.tausForTauIdMVATrainingDiscriminationByDecayModeFinding = process.hpsPFTauDiscriminationByDecayModeFindingNewDMs.clone(
+process.tausForTauIdMVATrainingDiscriminationByDecayModeFinding = process.hpsPFTauDiscriminationByDecayModeFinding.clone(
     PFTauProducer = cms.InputTag('tausForTauIdMVATraining')
 )
 process.produceTauIdMVATrainingNtupleSequence += process.tausForTauIdMVATrainingDiscriminationByDecayModeFinding
@@ -181,8 +181,6 @@ process.tausForTauIdMVATrainingTransverseImpactParameters = process.hpsPFTauTran
 process.produceTauIdMVATrainingNtupleSequence += process.tausForTauIdMVATrainingTransverseImpactParameters
 
 tauIdDiscriminatorsToReRun = [
-    "hpsPFTauDiscriminationByDecayModeFindingNewDMs",
-    "hpsPFTauDiscriminationByDecayModeFindingOldDMs",
     "hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr",
     "hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr",
     "hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr",
@@ -390,8 +388,7 @@ process.tauIdMVATrainingNtupleProducer = cms.EDProducer("TauIdMVATrainingNtupleP
     minGenVisPt = cms.double(10.),                                          
     dRmatch = cms.double(0.3),
     tauIdDiscriminators = cms.PSet(
-        decayModeFindingNewDMs = cms.InputTag('tausForTauIdMVATrainingDiscriminationByDecayModeFindingNewDMs'),
-        decayModeFindingOldDMs = cms.InputTag('tausForTauIdMVATrainingDiscriminationByDecayModeFindingOldDMs'),
+        decayModeFinding = cms.InputTag('tausForTauIdMVATrainingDiscriminationByDecayModeFinding'),
         byLooseCombinedIsolationDeltaBetaCorr8Hits = cms.InputTag('tausForTauIdMVATrainingDiscriminationByLooseCombinedIsolationDBSumPtCorr'),
         byMediumCombinedIsolationDeltaBetaCorr8Hits = cms.InputTag('tausForTauIdMVATrainingDiscriminationByMediumCombinedIsolationDBSumPtCorr'),
         byTightCombinedIsolationDeltaBetaCorr8Hits = cms.InputTag('tausForTauIdMVATrainingDiscriminationByTightCombinedIsolationDBSumPtCorr'),
