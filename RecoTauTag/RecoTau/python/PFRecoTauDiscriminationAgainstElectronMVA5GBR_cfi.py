@@ -1,8 +1,8 @@
 import FWCore.ParameterSet.Config as cms
+
 from RecoTauTag.RecoTau.TauDiscriminatorTools import requireLeadTrack
 
-pfRecoTauDiscriminationAgainstElectronMVA4GBR = cms.EDProducer(
-    "PFRecoTauDiscriminationAgainstElectronMVA4GBR",
+pfRecoTauDiscriminationAgainstElectronMVA5GBR = cms.EDProducer("PFRecoTauDiscriminationAgainstElectronMVA5GBR",
 
     # tau collection to discriminate
     PFTauProducer = cms.InputTag('pfTauProducer'),
@@ -14,7 +14,7 @@ pfRecoTauDiscriminationAgainstElectronMVA4GBR = cms.EDProducer(
 
     method = cms.string("BDTG"),
 
-    gbrFile = cms.FileInPath('RecoTauTag/RecoTau/data/gbrDiscriminationAgainstElectronMVA4_v18.root'),
+    gbrFile = cms.FileInPath('RecoTauTag/RecoTau/data/gbrDiscriminationAgainstElectronMVA5.root'),
     
     returnMVA = cms.bool(True),
 

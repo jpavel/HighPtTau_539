@@ -107,12 +107,12 @@ for massPoint in WprimeMassPoints:
         'total_number_of_events'             : -1,
         'type'                               : 'SignalMC'
     }
-# CV: add Z' -> mumu and W'-> munu background samples
+# CV: add Z' -> ee and W'-> enu background samples
 ZprimeMassPoints = [ 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000 ]
 for massPoint in ZprimeMassPoints:
-    sampleName = "Zprime%1.0ftoMuMu" % massPoint
+    sampleName = "Zprime%1.0ftoElecElec" % massPoint
     samples[sampleName] = {
-        'datasetpath'                        : '/ZprimePSIToMuMu_M-%1.0f_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
+        'datasetpath'                        : '/ZprimePSIToEE_M-%1.0f_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
         'dbs_url'                            : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
         'events_per_job'                     : 50000,
         'total_number_of_events'             : -1,
@@ -120,44 +120,26 @@ for massPoint in ZprimeMassPoints:
     }
 WprimeMassPoints = [ 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3200, 3500, 3700, 4000 ]
 for massPoint in WprimeMassPoints:
-    sampleName = "Wprime%1.0ftoMuNu" % massPoint
+    sampleName = "Wprime%1.0ftoElecNu" % massPoint
     samples[sampleName] = {
-        'datasetpath'                        : '/WprimeToMuNu_M-%1.0f_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
+        'datasetpath'                        : '/WprimeToENu_M-%1.0f_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
         'dbs_url'                            : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
         'events_per_job'                     : 50000,
         'total_number_of_events'             : -1,
         'type'                               : 'BackgroundMC'
     }
-mssmHiggsMassPoints = [ 100, 110, 120, 130, 140 ]
-for massPoint in mssmHiggsMassPoints:
-    ggSampleName = "ggA%1.0ftoMuMu" % massPoint
-    samples[ggSampleName] = {
-        'datasetpath'                        : '/SUSYGluGluToHToMuMu_M-%1.0f_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
-        'dbs_url'                            : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
-        'events_per_job'                     : 50000,
-        'total_number_of_events'             : 200000,
-        'type'                               : 'BackgroundMC'
-    }
-    bbSampleName = "bbA%1.0ftoMuMu" % massPoint
-    samples[bbSampleName] = {
-        'datasetpath'                        : '/SUSYBBHToMuMu_M-%1.0f_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
-        'dbs_url'                            : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
-        'events_per_job'                     : 50000,
-        'total_number_of_events'             : 200000,
-        'type'                               : 'BackgroundMC'
-    }
 DrellYanMassPoints = [ 120, 200, 400, 500, 700, 800, 1000, 1500, 2000 ]
 for massPoint in DrellYanMassPoints:
-    sampleName = "DY%1.0ftoMuMu" % massPoint
+    sampleName = "DY%1.0ftoElecElec" % massPoint
     samples[sampleName] = {
-        'datasetpath'                        : '/DYToMuMu_M-%1.0f_CT10_TuneZ2star_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
+        'datasetpath'                        : '/DYToEE_M-%1.0f_CT10_TuneZ2star_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM' % massPoint,
         'dbs_url'                            : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
         'events_per_job'                     : 50000,
         'total_number_of_events'             : 100000,
         'type'                               : 'BackgroundMC'
     }
 
-version = "antiMuonDiscr_v1_8"
+version = "antiElectronDiscr_v1_1"
 
 submitJobFraction = 1.00
 
@@ -171,7 +153,7 @@ use_server = 0
 datasetpath = $datasetpath
 dbs_url = $dbs_url
 pset = $pset
-output_file = antiMuonDiscrMVATrainingNtuple.root
+output_file = antiElectronDiscrMVATrainingNtuple.root
 total_number_of_events = $total_number_of_events
 events_per_job = $events_per_job
 
@@ -219,13 +201,13 @@ debug_wrapper = 1
 SE_black_list = T2_US_Nebraska,T2_KR_KNU,T2_IT_Legnaro,T2_RU_JINR
 ''')
 
-configFile = "produceAntiMuonDiscrMVATrainingNtuple_cfg.py"
+configFile = "produceAntiElectronDiscrMVATrainingNtuple_cfg.py"
 
 currentDirectory    = os.getcwd()
 submissionDirectory = os.path.join(currentDirectory, "crab")
 
-#executable_crab = 'crab'
-executable_crab = 'crab -GRID.dont_check_proxy 1' # NOTE: requires to execute 'voms-proxy-init -voms cms -valid 72:0' prior to running submitAntiMuonDiscrMVATrainingNtupleProduction_grid.py
+executable_crab = 'crab'
+#executable_crab = 'crab -GRID.dont_check_proxy 1' # NOTE: requires to execute 'voms-proxy-init -voms cms -valid 72:0' prior to running submitAntiElectronDiscrMVATrainingNtupleProduction_grid.py
 
 def getStringRep_bool(flag):
     retVal = None
@@ -265,7 +247,7 @@ for sampleName, sampleOption in samples.items():
     cfgFile_modified.write(cfg_modified)
     cfgFile_modified.close()
 
-    output_files = [ "antiMuonDiscrMVATrainingNtuple.root" ]
+    output_files = [ "antiElectronDiscrMVATrainingNtuple.root" ]
         
     # create crab config file
     crabOptions = None
@@ -285,7 +267,7 @@ for sampleName, sampleOption in samples.items():
             'pset'                   : cfgFileName_modified,
             'output_file'            : ",".join(output_files),
             'ui_working_dir'         : os.path.join(submissionDirectory, "crabdir_%s_%s" % (sampleName, version)),
-            'user_remote_dir'        : "CMSSW_5_3_x/Ntuples/antiMuonDiscrMVATraining/%s/%s" % (version, sampleName)
+            'user_remote_dir'        : "CMSSW_5_3_x/Ntuples/antiElectronDiscrMVATraining/%s/%s" % (version, sampleName)
         }
         crab_template = crab_template_mc
     elif sampleOption['type'] == "Data":
@@ -296,12 +278,12 @@ for sampleName, sampleOption in samples.items():
             'pset'                   : cfgFileName_modified,
             'output_file'            : ",".join(output_files),
             'ui_working_dir'         : os.path.join(submissionDirectory, "crabdir_%s_%s" % (sampleName, version)),
-            'user_remote_dir'        : "CMSSW_5_3_x/Ntuples/antiMuonDiscrMVATraining/%s/%s" % (version, sampleName)
+            'user_remote_dir'        : "CMSSW_5_3_x/Ntuples/antiElectronDiscrMVATraining/%s/%s" % (version, sampleName)
         }
         crab_template = crab_template_data
     else:
         raise ValueError("Invalid sample type = %s !!" % sampleOption['type'])
-    crabFileName = "crab_antiMuonDiscrMVATrainingNtupleProduction_%s_%s.cfg" % (sampleName, version)
+    crabFileName = "crab_antiElectronDiscrMVATrainingNtupleProduction_%s_%s.cfg" % (sampleName, version)
     crabFileName_full = os.path.join(submissionDirectory, crabFileName)
     crabFile = open(crabFileName_full, 'w')
     crabConfig = crab_template.substitute(crabOptions)
@@ -310,8 +292,8 @@ for sampleName, sampleOption in samples.items():
 
     # create output directory
     # (in principle crab will do this, but sometimes fails with 'Permission denied' error, causing all jobs to fail with error code 60307)
-    createFilePath("/store/user/veelken/CMSSW_5_3_x/Ntuples/antiMuonDiscrMVATraining/%s" % version)
-    createFilePath("/store/user/veelken/CMSSW_5_3_x/Ntuples/antiMuonDiscrMVATraining/%s/%s" % (version, sampleName))
+    createFilePath("/store/user/veelken/CMSSW_5_3_x/Ntuples/antiElectronDiscrMVATraining/%s" % version)
+    createFilePath("/store/user/veelken/CMSSW_5_3_x/Ntuples/antiElectronDiscrMVATraining/%s/%s" % (version, sampleName))
 
     # keep track of commands necessary to create, submit and publish crab jobs
     crabCommands_create_and_submit.append('%s -create -cfg %s' % (executable_crab, crabFileName_full))
@@ -342,7 +324,7 @@ for sampleName, sampleOption in samples.items():
     else: # Data
         crabCommands_create_and_submit.append('%s -submit -c %s' % (executable_crab, crabOptions['ui_working_dir']))
     
-shellFileName_create_and_submit = "antiMuonDiscrMVATrainingNtupleProduction_crab_create_and_submit.sh"
+shellFileName_create_and_submit = "antiElectronDiscrMVATrainingNtupleProduction_crab_create_and_submit.sh"
 shellFile_create_and_submit = open(shellFileName_create_and_submit, "w")
 for crabCommand in crabCommands_create_and_submit:
     shellFile_create_and_submit.write("%s\n" % crabCommand)
