@@ -1107,10 +1107,7 @@ if(!background_ && mcMatch_ && !useGenTaus_){
     trkAvgDist[0] = isoptsum[0] >0 ? trkAvgDist[0]/isoptsum[0] : -1;
     trkAvgDist[1] = isoptsum[1] >0 ? trkAvgDist[1]/isoptsum[1] : -1;
     trkAvgDist[2] = (isoptsum[0] + isoptsum[1]) >0 ? (trkAvgDist[0] + trkAvgDist[1])/(isoptsum[0]+isoptsum[1]) : -1;
-  
-    if(requireDecayMode_>=0 && resultDM){
-      if(requireDecayMode_ == 0 || (requireDecayMode_ == 1 && nCharged == 1 && nPi0 ==0) || (requireDecayMode_ == 2 && nCharged ==1 && nPi0 > 0) || (requireDecayMode_==3 && nCharged == 3)){
-	
+
     if(background_){
       pt_mon=jet1->pt();
       eta_mon = jet1->eta();
@@ -1123,6 +1120,7 @@ if(!background_ && mcMatch_ && !useGenTaus_){
     
     if(useOldDM_== true && nCharged ==2 ) continue;
     if(pt_mon < 20.0 || fabs(eta_mon)>2.3) continue;
+
 
     if(result1){
       h_eff_pt_1->Fill(pt_mon,1);
@@ -1141,6 +1139,29 @@ if(!background_ && mcMatch_ && !useGenTaus_){
       h_eff_vx_1->Fill(nVx,0);
       h_eff_id_phi_1->Fill(phi_mon,0);
     }
+
+  
+    if(requireDecayMode_>=0 && resultDM){
+      if(requireDecayMode_ == 0 || (requireDecayMode_ == 1 && nCharged == 1 && nPi0 ==0) || (requireDecayMode_ == 2 && nCharged ==1 && nPi0 > 0) || (requireDecayMode_==3 && nCharged == 3)){
+	
+
+//     if(result1){
+//       h_eff_pt_1->Fill(pt_mon,1);
+//       h_eff_eta_1->Fill(eta_mon,1);
+//       h_eff_vx_1->Fill(nVx,1); 
+//       h_eff_id_pt_1->Fill(pt_mon,1);
+//       h_eff_id_eta_1->Fill(eta_mon,1);
+//       h_eff_id_vx_1->Fill(nVx,1);    
+//       h_eff_id_phi_1->Fill(phi_mon,1);
+//     }else{
+//       h_eff_id_pt_1->Fill(pt_mon,0);
+//       h_eff_id_eta_1->Fill(eta_mon,0);
+//       h_eff_id_vx_1->Fill(nVx,0);
+//       h_eff_pt_1->Fill(pt_mon,0);
+//       h_eff_eta_1->Fill(eta_mon,0);
+//       h_eff_vx_1->Fill(nVx,0);
+//       h_eff_id_phi_1->Fill(phi_mon,0);
+//     }
 
     if(resultLoose){
       h_eff_id_pt_loose->Fill(pt_mon,1);
